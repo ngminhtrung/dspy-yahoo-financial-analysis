@@ -1,6 +1,16 @@
 # DSPy Yahoo Finance Demo Outputs
 
-## Query 1: Apple (AAPL) News + Stock Impact
+## Table of Contents
+- [Query Outputs](#query-outputs)
+- [Query 1: Apple (AAPL) News + Stock Impact](#query-1-apple-aapl-news--stock-impact)
+- [Query 2: Compare AAPL, GOOGL, and MSFT](#query-2-compare-aapl-googl-and-msft)
+- [Query 3: Tesla (TSLA) News + Sentiment](#query-3-tesla-tsla-news--sentiment)
+- [DSPy Benefits (Concise, With Sample Data)](#dspy-benefits-concise-with-sample-data)
+- [Analysis_Response Signature Q&A (Summary)](#analysis_response-signature-qa-summary)
+
+## Query Outputs
+
+### Query 1: Apple (AAPL) News + Stock Impact
 
 **Headline take:** Apple (AAPL) stock is currently at $272.20, with recent news highlighting challenges in AI and Vision Pro that could pressure the price downward, despite a strong core business.[1]
 
@@ -17,7 +27,7 @@ These factors could **negatively affect the stock price** by amplifying valuatio
 
 ---
 
-## Query 2: Compare AAPL, GOOGL, and MSFT
+### Query 2: Compare AAPL, GOOGL, and MSFT
 
 **Headline take:** AAPL, GOOGL, and MSFT show strong overall performance, with GOOGL leading in YTD returns at around 66%, followed by MSFT at 17% and AAPL at 10%.[observation_0]
 
@@ -51,7 +61,7 @@ GOOGL has outperformed YTD and over 1–5 years, while AAPL and MSFT show steadi
 
 ---
 
-## Query 3: Tesla (TSLA) News + Sentiment
+### Query 3: Tesla (TSLA) News + Sentiment
 
 **Summary:** Tesla (TSLA) news centers on stock performance and upcoming metrics as of Jan 1–2, 2026. TSLA traded **$449.20 to $458.35**, closing at **$449.55** with a market cap of **$1.5T**, P/E of **300.49**, and volume of 49.08M (vs. 72.47M avg).[1] The 52-week range spans **$214.25 to $498.83**.[1]
 
