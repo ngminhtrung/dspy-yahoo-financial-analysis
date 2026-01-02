@@ -103,3 +103,27 @@ lm = dspy.LM(model="perplexity/sonar")
 # later:
 lm = dspy.LM(model="gpt-4o")
 ```
+
+# DSPy Concept and Alternatives
+
+## DSPy Concept (Why It Exists)
+- Declarative LLM programming: define signatures (inputs/outputs) and modules instead of ad-hoc prompts.
+- Structured outputs: DSPy prompts the model to emit specific fields and parses them automatically.
+- Optimization loop: built-in evaluation and teleprompting to improve prompts systematically.
+- Agent orchestration: ReAct and tool calling are first-class components, not custom glue.
+
+## Open-Source Alternatives (Different Focus Areas)
+- **LangChain**: broad tool + agent ecosystem, strong integrations, less structure by default.
+- **LangGraph**: stateful graph-based agent workflows for complex orchestration.
+- **LlamaIndex**: data-centric pipelines (RAG, indexing, retrieval) with composable components.
+- **Haystack**: production-oriented RAG pipelines and evaluation tooling.
+- **AutoGen**: multi-agent collaboration and conversation patterns.
+- **CrewAI**: role-based multi-agent workflows.
+- **Semantic Kernel**: skill/plugin orchestration with planners.
+
+## Quick Selection Guide
+- Structure + optimization: DSPy
+- Integration breadth + flexibility: LangChain / LangGraph
+- Data/RAG focus: LlamaIndex / Haystack
+- Multi-agent coordination: AutoGen / CrewAI
+- Skill/plugin orchestration: Semantic Kernel
