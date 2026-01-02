@@ -7,6 +7,46 @@ A financial agent that fetches news, analyzes sentiment, and provides investment
 
 See `outputs.md` for formatted demo results plus a concise DSPy benefits section.
 
+# Architecture
+
+## Sequence Diagram
+```mermaid
+sequenceDiagram
+    participant User
+    participant DSPy as DSPy ReAct Agent
+    participant LC as LangChain Tool Wrapper
+    participant YF as Yahoo Finance News Source
+
+    User->>DSPy: financial_query
+    DSPy->>DSPy: Plan + decide tool call
+    DSPy->>LC: call YahooFinanceNewsTool(query)
+    LC->>YF: fetch news
+    YF-->>LC: news results
+    LC-->>DSPy: tool output (news text)
+    DSPy->>DSPy: Synthesize analysis_response
+    DSPy-->>User: final analysis
+```
+
+## Activity Diagram
+```mermaid
+flowchart TD
+    A[User submits financial_query] --> B[DSPy ReAct: plan next step]
+    B --> C{Need tools?}
+    C -- yes --> D[Invoke YahooFinanceNewsTool via LangChain]
+    D --> E[Fetch Yahoo Finance news]
+    E --> F[Return news to DSPy]
+    C -- no --> G[Compose analysis_response]
+    F --> G
+    G --> H[Return response to user]
+```
+
+## Components
+| Component | Input | Handling Process | Output |
+|---|---|---|---|
+| DSPy ReAct Agent | `financial_query` + tool results | Plans next step, selects tools, integrates observations, and composes response. | `analysis_response` |
+| LangChain Tool Wrapper | Tool call request (query string) | Validates request, calls YahooFinanceNewsTool, normalizes result for DSPy. | News text payload |
+| Yahoo Finance News Source | Query (ticker/topic) | Retrieves latest news items from Yahoo Finance. | Raw news results |
+
 # Why DSPy Here (With Examples)
 
 ## 1) Structured inputs/outputs (signatures + modules)
