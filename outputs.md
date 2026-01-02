@@ -71,17 +71,71 @@ GOOGL has outperformed YTD and over 1–5 years, while AAPL and MSFT show steadi
 
 ## DSPy Benefits (Concise, With Sample Data)
 
-### 1) Structured inputs/outputs (signatures + modules)
-Define what goes in and what comes out, instead of ad-hoc prompts.
+DSPy adds a structured, programmable layer on top of raw LLM calls:
 
-Sample data:
+- Lets you define inputs/outputs with signatures and modules instead of ad‑hoc prompts.
+- Built‑in ReAct loop and tool orchestration, so the model can plan + call tools consistently.
+- Reusable components (modules) you can compose and test.
+- Evaluation + optimization workflows (teleprompting, metrics) to improve prompts systematically.
+- Adapter system to target different LLM providers while keeping the same code.
+
+In this demo, DSPy is mainly giving you the ReAct agent + tool wiring and a path to evaluate/tune the behavior later. Without DSPy, you’d hand‑roll the tool‑calling logic and prompt structure.
+
+
+
+### 1) Structured inputs/outputs (signatures + modules)
+
+Instead of free‑form prompts, you define what goes in and what comes out.
+Example (sample data shape):
+
 ```python
-input_data = {"financial_query": "Compare AAPL and MSFT performance"}
-output_data = {"analysis_response": "AAPL leads YTD; MSFT shows steadier long-term growth..."}
+# Signature: financial_query -> analysis_response
+input_data = {
+  "financial_query": "Compare AAPL and MSFT performance"
+}
+# Expected output shape
+output_data = {
+  "analysis_response": "AAPL leads in YTD; MSFT shows steadier long-term growth..."
+}
 ```
+
+Actual free-form output (no DSPy) from ChatGPT Plus:
+```
+Performance Trends & Analyst Views
+- In 2025, MSFT has generally outpaced AAPL on a YTD basis, with some data showing ~19–21% gains versus ~11% for Apple.
+- Microsoft’s cloud (Azure) and AI monetization are cited as growth drivers, while Apple lags slightly on AI product monetization.
+- Recent news highlights Apple leadership changes in AI strategy and Microsoft’s positioning as a top AI pick for 2026.
+
+Concise Takeaway
+Microsoft trades higher with stronger recent performance and premium valuation, underpinned by cloud and AI growth prospects. Apple remains large-cap with solid fundamentals but has underperformed MSFT this cycle and is viewed as slower to monetize AI.
+```
+
+Example DSPy-structured output (same idea, but constrained schema):
+```python
+output_data = {
+  "analysis_response": (
+    "MSFT outpaces AAPL YTD (~19–21% vs ~11%) with Azure/AI as key drivers. "
+    "AAPL remains fundamentally strong but lags in AI monetization; leadership shifts noted. "
+    "Takeaway: MSFT has stronger momentum and premium valuation; AAPL underperforms this cycle."
+  )
+}
+```
+
+Comparison (no DSPy vs DSPy):
+- **Structure:** Free-form output is a narrative block; DSPy enforces a single, predictable `analysis_response` field.
+- **Parsing:** Free-form requires manual parsing; DSPy output is already in a known field and easy to post-process.
+- **Consistency:** Free-form format varies across runs; DSPy keeps the same shape across queries.
+- **Reuse:** Free-form prompt must be re-authored; DSPy signature can be reused across modules.
+
+
 
 ### 2) Built-in ReAct loop + tool orchestration
 DSPy manages the think -> call tool -> observe -> answer cycle.
+
+Why it helps: 
+- You don’t manually code the decision logic for when/which tool to call.
+
+
 
 Sample tool calls:
 ```
@@ -94,14 +148,18 @@ Final: Combined analysis using price + news signals.
 ### 3) Reusable components (modules you can compose + test)
 Build a module once, reuse it in multiple flows.
 
+Why it helps: You can build a “price‑check” or “news‑summarize” module and plug it into different pipelines.
+
 Sample reuse:
 ```python
 class FinancialAnalysisAgent(dspy.Module):
+    # used in demo
     ...
 
 class RiskSummary(dspy.Module):
-    # Same tools, different output focus.
-    ...
+    # reuse the same tools but different output
+    signature = "financial_query -> risk_summary"
+
 ```
 
 ### 4) Evaluation + optimization (teleprompting + metrics)
@@ -121,7 +179,10 @@ Switch providers without rewriting agent logic.
 
 Sample swap:
 ```python
+# Perplexity
 lm = dspy.LM(model="perplexity/sonar")
-# later:
+
+# Later: switch to OpenAI
 lm = dspy.LM(model="gpt-4o")
+
 ```
