@@ -5,6 +5,8 @@ This tutorial shows how to build a financial analysis agent using DSPy ReAct wit
 # What You'll Build¶
 A financial agent that fetches news, analyzes sentiment, and provides investment insights.
 
+See `outputs.md` for formatted demo results plus a concise DSPy benefits section.
+
 # Why DSPy Here (With Examples)
 
 ## 1) Structured inputs/outputs (signatures + modules)
@@ -61,4 +63,3 @@ lm = dspy.LM(model="perplexity/sonar")
 # later:
 lm = dspy.LM(model="gpt-4o")
 ```
-
