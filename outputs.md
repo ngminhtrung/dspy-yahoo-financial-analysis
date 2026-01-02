@@ -66,3 +66,62 @@ GOOGL has outperformed YTD and over 1–5 years, while AAPL and MSFT show steadi
 | **Above 423.36** | Gap fill and buy signal[2] | Targets 530s within 2–3 weeks.[2] |
 
 **Sentiment:** Overall **neutral to cautious**. Upside comes from stability near 52-week highs and a potential bullish reversal if support holds; downside risk from delivery shortfalls, high valuation, lower volume, and support breaks.[1][2]
+
+---
+
+## DSPy Benefits (Concise, With Sample Data)
+
+### 1) Structured inputs/outputs (signatures + modules)
+Define what goes in and what comes out, instead of ad-hoc prompts.
+
+Sample data:
+```python
+input_data = {"financial_query": "Compare AAPL and MSFT performance"}
+output_data = {"analysis_response": "AAPL leads YTD; MSFT shows steadier long-term growth..."}
+```
+
+### 2) Built-in ReAct loop + tool orchestration
+DSPy manages the think -> call tool -> observe -> answer cycle.
+
+Sample tool calls:
+```
+Tool: get_stock_price("AAPL") -> {"ticker":"AAPL","price":271.86,"change_percent":-0.43}
+Tool: get_stock_price("MSFT") -> {"ticker":"MSFT","price":483.62,"change_percent":-0.8}
+Tool: YahooFinanceNewsTool("AAPL") -> "Vision Pro demand softness..."
+Final: Combined analysis using price + news signals.
+```
+
+### 3) Reusable components (modules you can compose + test)
+Build a module once, reuse it in multiple flows.
+
+Sample reuse:
+```python
+class FinancialAnalysisAgent(dspy.Module):
+    ...
+
+class RiskSummary(dspy.Module):
+    # Same tools, different output focus.
+    ...
+```
+
+### 4) Evaluation + optimization (teleprompting + metrics)
+Score outputs and improve prompts systematically.
+
+Sample eval set:
+```python
+train = [
+    {"financial_query": "AAPL outlook", "analysis_response": "Mentions AI + Vision Pro risks"},
+    {"financial_query": "TSLA sentiment", "analysis_response": "Mixed/neutral stance"},
+]
+metric = "SemanticF1"
+```
+
+### 5) Adapter system for multiple LLM providers
+Switch providers without rewriting agent logic.
+
+Sample swap:
+```python
+lm = dspy.LM(model="perplexity/sonar")
+# later:
+lm = dspy.LM(model="gpt-4o")
+```
