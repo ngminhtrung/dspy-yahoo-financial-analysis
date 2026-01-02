@@ -186,3 +186,63 @@ lm = dspy.LM(model="perplexity/sonar")
 lm = dspy.LM(model="gpt-4o")
 
 ```
+
+---
+
+## Analysis_Response Signature Q&A (Summary)
+
+### Q: Is `analysis_response` pre-configured or pre-trained by DSPy?  
+A: 
+- No—analysis_response is not pre‑configured or pre‑trained by DSPy. It’s just the name of an output field in your signature (e.g., financial_query -> analysis_response). DSPy uses that name to:
+  - Tell the model what to produce (a single output field called analysis_response)
+  - Parse the model’s reply into that field
+
+What it contains depends entirely on your prompt/signature and the model’s output. In your demo, it’s the narrative analysis text (prices, news, sentiment). If you changed the signature or instructions, the content would change accordingly.
+
+### Q: What does `analysis_response` contain?  
+A: Whatever your signature and instructions ask for. In this demo it is a narrative analysis (prices, news, sentiment), but it could be anything you define.
+
+DSPy doesn’t predefine signatures; it’s up to the user. The guidance from DSPy docs is essentially: pick clear, descriptive input/output fields that match the task, keep the schema as small as possible, and prefer structured outputs when you need downstream parsing. So there’s no fixed “correct” signature—just best practice to make the I/O explicit and consistent.
+
+Here are 10 example signatures for financial queries (in DSPy signature string form):
+```
+financial_query -> analysis_response
+ticker, period -> price_summary, trend
+tickers -> comparison_table, takeaway
+financial_query -> sentiment, key_drivers, risks
+ticker, news_window_days -> news_summary, sentiment_score
+ticker -> catalysts, headwinds, investment_thesis
+ticker, horizon -> bull_case, bear_case, base_case
+portfolio, risk_profile -> allocation, rationale
+financial_query -> tool_plan, analysis_response
+ticker, metric_list -> metrics_snapshot, interpretation
+```
+
+### Q: How does the signature set-up impact the output?  
+A: It defines the expected output fields and structure, which shapes the prompt and parsing. Changing the signature changes what fields the model must produce and what DSPy extracts.
+
+The signature shapes the output in two concrete ways:
+1. It tells the model what fields to return
+
+If your signature is financial_query -> analysis_response, DSPy expects exactly one output field named analysis_response. The prompt it builds instructs the model to emit content for that field.
+
+2. It controls how DSPy parses and validates the response
+DSPy parses the model’s reply into that field. If the response doesn’t match the expected structure, it can fail parsing or retry (depending on adapter).
+
+Example impact:
+
+Signature A:
+```
+financial_query -> analysis_response
+```
+Output should be a single block of analysis text.
+
+Signature B:
+
+```
+financial_query -> summary, risks, catalysts
+```
+
+Now DSPy expects three distinct fields. The model is prompted to provide them, and DSPy splits them into separate outputs.
+
+So the signature doesn’t “train” the model, but it constrains what a valid response looks like and makes outputs predictable for downstream use.
