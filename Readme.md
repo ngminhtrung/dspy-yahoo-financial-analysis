@@ -106,11 +106,26 @@ lm = dspy.LM(model="gpt-4o")
 
 # DSPy Concept and Alternatives
 
-## DSPy Concept (Why It Exists)
-- Declarative LLM programming: define signatures (inputs/outputs) and modules instead of ad-hoc prompts.
-- Structured outputs: DSPy prompts the model to emit specific fields and parses them automatically.
-- Optimization loop: built-in evaluation and teleprompting to improve prompts systematically.
-- Agent orchestration: ReAct and tool calling are first-class components, not custom glue.
+## DSPy Concept (Clear Framing)
+
+### Problem Statement
+- LLM apps built from ad-hoc prompts are hard to control, hard to parse, and hard to improve systematically.
+- Tool-using agents often require brittle glue code and inconsistent output formats.
+
+### Solution Approach
+- Treat LLM interactions as programs with explicit input/output contracts.
+- Use evaluation data to iteratively improve prompt behavior rather than manual tweaking.
+
+### Technical Solution
+- **Signatures** define inputs/outputs (e.g., `financial_query -> analysis_response`).
+- **Modules** encapsulate reasoning steps (e.g., ReAct) and are composable.
+- **Adapters** format prompts and parse structured outputs across providers.
+- **Evaluation/teleprompting** provides measurable feedback to optimize prompts.
+
+### Feasible to Scale
+- Reusable modules + signatures allow teams to standardize outputs across many tasks.
+- Evaluation pipelines make model behavior measurable as the codebase grows.
+- Provider adapters let you scale across models without rewriting logic.
 
 ## Open-Source Alternatives (Different Focus Areas)
 - **LangChain**: broad tool + agent ecosystem, strong integrations, less structure by default.
@@ -127,3 +142,20 @@ lm = dspy.LM(model="gpt-4o")
 - Data/RAG focus: LlamaIndex / Haystack
 - Multi-agent coordination: AutoGen / CrewAI
 - Skill/plugin orchestration: Semantic Kernel
+
+# Who Uses DSPy (And How)
+
+1) Solo architect (VSCode + Codex)  
+Leverages DSPy to define clear signatures per feature, reuse ReAct + tool wiring without hand-rolled glue, and add small evaluation sets before shipping.
+
+2) ML engineer prototyping pipelines  
+Uses signatures/modules to iterate quickly, teleprompting + metrics to optimize quality, and adapters to compare providers without rewrites.
+
+3) Applied AI team standardizing outputs  
+Enforces output schemas for downstream parsing, shares reusable modules across teams, and adds evaluation gates in CI.
+
+4) Product team shipping tool-using agents  
+Relies on ReAct for robust tool calls, predictable outputs for UI/analytics, and provider adapters to swap models safely.
+
+5) Researcher benchmarking prompt/program optimization  
+Formalizes tasks with signatures, measures improvements with metrics, and runs controlled comparisons across LLMs.
